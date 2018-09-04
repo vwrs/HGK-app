@@ -1,17 +1,27 @@
-<!DOCTYPE html>
-<html>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA"></script>
-<script>
-    function initMap() {
-        var latlng = new google.maps.LatLng( 34.808502, 135.639683 );//中心の緯度, 経度
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,//ズームの調整
-          center: latlng//上で設定した中心
-        });
-        var marker = new google.maps.Marker({
-          position: latlng,
-          map: map
-        });
-      }
-</script>
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Google Maps API</title>
+<style type="text/css">
+#container {
+	width: 700px;
+	margin: 0 auto;
+}
+#sample {
+	width: 700px;
+	height: 400px;
+}
+</style>
+</head>
+<script src="./sample.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=initMap"async></script>
+<body>
+
+<div id="container">
+	<div id="sample"></div>
+
+	<p class="back"><a href="http://www.tam-tam.co.jp/tipsnote/javascript/post7755.html">LINK</a></p>
+</div>
+</body>
 </html>
