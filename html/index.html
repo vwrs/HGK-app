@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA"></script>
+<script>
+    function initMap() {
+        var latlng = new google.maps.LatLng( 34.808502, 135.639683 );//中心の緯度, 経度
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,//ズームの調整
+          center: latlng//上で設定した中心
+        });
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map
+        });
+      }
+</script>
+</html>
