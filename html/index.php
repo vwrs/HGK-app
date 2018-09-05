@@ -76,37 +76,30 @@ $sdk = new Aws\Sdk([
 $dynamodb = $sdk->createDynamoDb();
 $marshaler = new Marshaler();
 
+    function getFullScanResult($dynamodb, $conditions)
+    {
+        while (true) {
+            $result = $dynamodb->scan($conditions);
+            $dataFromDynamo = [];
+ 
+            if (!empty($result['Items'])) {
+                $dataFromDynamo[] = $result;
+            }
+ 
+            if (isset($result['LastEvaluatedKey'])) {
+                $conditions['ExclusiveStartKey'] = $result['LastEvaluatedKey'];
+            } else {
+                break;
+            }
+        }
+        return $dataFromDynamo;
+    }
+$tableName = 'hgk-db';
+$conditions = ['TableName' => $tableName];
+$fulls = getFullScanResult($dynamodb, $conditions);
+var_dump($fulls);
 $tableName = 'hgk-db';
 
-$user_id = 100;
-$timestamp = 1234;
-$test = '
-    {
-        "user_id": ' . $user_id . ',
-        "timestamp": ' . $timestamp . '
-    }
-';
-console_log($test);
-
-$key = $marshaler->marshalJson($test
-);
-
-$params = [
-    'TableName' => $tableName,
-    'Key' => $key
-];
-
-try {
-    $result = $dynamodb->getItem($params);
-    print_r($result["Item"]);
-    console_log($params);
-    console_log($result["Item"]);
-
-} catch (DynamoDbException $e) {
-    echo "Unable to get item:\n";
-    echo $e->getMessage() . "\n";
-	console_log($e);
-}
 ?>
 </body>
 </html>
