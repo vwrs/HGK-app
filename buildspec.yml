@@ -16,8 +16,10 @@ phases:
     #finally:
       # - command
       # - command
-  #pre_build:
-    #commands:
+  pre_build:
+    commands:
+      - echo "docker login ..."
+      - $(aws ecr get-login --no-include-email --region ap-northeast-1)
       # - command
       # - command
     #finally:
