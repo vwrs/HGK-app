@@ -29,17 +29,16 @@ phases:
     commands:
       - echo "docker build -t hgk/app ."
       - docker build -t hgk/app .
-
       # - command
       # - command
     #finally:
       # - command
       # - command
   post_build:
-    - echo "docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest"
-    - docker tag hgk/app:latest 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
-    - docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
-    #commands:
+    commands:
+      - echo "docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest"
+      - docker tag hgk/app:latest 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
+      - docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
       # - command
       # - command
     #finally:
