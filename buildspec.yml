@@ -4,11 +4,11 @@ phases:
   pre_build:
     commands:
       - aws --version
-      - $(aws ecr get-login --no-include-email --region ap-northeast-1)
+      - sh -c "`aws ecr get-login --no-include-email --region ap-northeast-1`"
   build:
     commands:
       - docker build -t hgk/app .
+      - docker tag hgk/app:latest 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
   post_build:
     commands:
-      - docker tag hgk/app:latest 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
       - docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
