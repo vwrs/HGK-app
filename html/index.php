@@ -20,7 +20,7 @@ var marker;
 function initMap() {
  map = new google.maps.Map(document.getElementById('sample'), {
      center: {
-           lat: 35.633454, 
+           lat: 35.633454,
           lng: 139.716807
        },
       zoom: 15
@@ -28,7 +28,7 @@ function initMap() {
  marker = new google.maps.Marker({
 	map : map,
 	position : {
-           lat: 35.633454, 
+           lat: 35.633454,
           lng: 139.716807
 	}
 	});
@@ -44,7 +44,7 @@ function initMap() {
 </div>
 <?php
 
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 date_default_timezone_set('UTC');
 
 use Aws\DynamoDb\Exception\DynamoDbException;
