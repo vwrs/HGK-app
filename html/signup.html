@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up</title>
+    <!-- AWS SDK //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
+    <!-- Amazon Cognito //-->
+    <script src="js/jsbn.js"></script>
+    <script src="js/jsbn2.js"></script>
+    <script src="js/sjcl.js"></script>
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <!-- jquery //-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- bootstrap3 //-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <form class="form-signup">
+            <h2 class="form-signup-heading">Sign Up</h2>
+            <div id="message" class="alert" style="display:none;"></div>
+            <label id="labelUsername">UserID</label><br>
+            <input type="text" id="inputUsername" class="form-control" placeholder="UserID" required autofocus></input>
+            <label id="labelEmail">Email</label><br>
+            <input type="text" id="inputEmail" class="form-control" placeholder="Email" required autofocus></input>
+            <label id="labelPassword">Password</label><br>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required></input>
+            <p></p>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="sign_up_btn" value="Sign Up"></input>
+            <p></p>
+            <a href="http://hkg-elb-app-760035853.ap-northeast-1.elb.amazonaws.com/signin.html" target="_blank">SignIn</a>
+            <p></p>
+            <a href="http://hkg-elb-app-760035853.ap-northeast-1.elb.amazonaws.com/activation.html" target="_blank">Activation & Forget Password</a>
+        </form>
+    </div>
+    <script>
+        // Initialize the Amazon Cognito credentials provider
+        AWSCognito.config.region = "ap-northeast-1";
+        AWSCognito.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: "ap-southeast-2:7188570c-2217-4b32-afad-6d06e199aeed"
+        });
+        var data = {
+            UserPoolId: "ap-southeast-2_o1miKeaj4",
+            ClientId: "5jv7a16l6nvhm11ckk1h86pv10"
+        };
+        var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(data);
+        var attributeList = [];
+        var cognitoUser;
+
+        // function uuid() {
+        //     var uuid = "", i, random;
+        //     for (i = 0; i < 32; i++) {
+        //         random = Math.random() * 16 | 0;
+        //         if (i == 8 || i == 12 || i == 16 || i == 20) {
+        //             uuid += "-"
+        //         }
+        //         uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+        //     }
+        //     return uuid;
+        // }
+
+        $("#sign_up_btn").click(function() {
+            username = $("#inputUsername").val();
+            //username = uuid();
+            email = $("#inputEmail").val();
+            password = $("#inputPassword").val();
+            if(!username) {
+                $("#message").text("Input UserID !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            if(!email) {
+                $("#message").text("Input Email !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            if(!password) {
+                $("#message").text("Input Password !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            var dataEmail = {
+                Name : "email",
+                Value : email
+            };
+            var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail);
+            attributeList.push(attributeEmail);
+            //var dataPhoneNumber = {
+            //    Name : "phone_number",
+            //    Value : '+81' + email
+            //};
+            //var attributePhoneNumber = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataPhoneNumber);
+            //attributeList.push(attributePhoneNumber);
+            userPool.signUp(username, password, attributeList, null, function(err, result){
+                if (err) {
+                    console.log(err);
+                    $("#message").text(err);
+                    $("#message").addClass("alert-danger");
+                    $("#message").show();
+                } else {
+                     var url = "activation.html";
+                     $("form").fadeOut(100, function(){
+                        $(location).attr("href", url);
+                     });
+                     $(".wrapper").addClass("form-success");
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

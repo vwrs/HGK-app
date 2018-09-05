@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>Activation & Forget Password</title>
+    <!-- AWS SDK //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
+    <!-- Amazon Cognito //-->
+    <script src="js/jsbn.js"></script>
+    <script src="js/jsbn2.js"></script>
+    <script src="js/sjcl.js"></script>
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <!-- jquery //-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- bootstrap3 //-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <form class="form-activation">
+            <h2 class="form-activation-heading">Activation</h2>
+            <div id="message" class="alert" style="display:none;"></div>
+            <label id="labelUsername">UserID</label><br>
+            <input type="text" id="inputUsername" class="form-control" placeholder="UserID" required autofocus></input>
+            <label id="labelActivationKey">Activation Key</label><br>
+            <input type="activationkey" id="inputActivationKey" class="form-control" placeholder="Activation Key" required></input>
+            <p></p>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="activate_btn" value="Activate"></input>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="send_key_btn" value="Re:Send Activation Key"></input>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="forget_password_btn" value="Forget Password"></input>
+            <p></p>
+            <a href="http://hkg-elb-app-760035853.ap-northeast-1.elb.amazonaws.com/signin.html" target="_blank">SignIn</a>
+            <p></p>
+            <a href="http://hkg-elb-app-760035853.ap-northeast-1.elb.amazonaws.com/signup.html" target="_blank">SignUp</a>
+        </form>
+    </div>
+    <script>
+        // Initialize the Amazon Cognito credentials provider
+        AWSCognito.config.region = "ap-northeast-1";
+        AWSCognito.config.credentials = new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: "ap-southeast-2:7188570c-2217-4b32-afad-6d06e199aeed"
+        });
+        var data = {
+            UserPoolId: "ap-southeast-2_o1miKeaj4",
+            ClientId: "5jv7a16l6nvhm11ckk1h86pv10"
+        };
+        var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(data);
+        var attributeList = [];
+        var cognitoUser;
+
+        $("#activate_btn").click(function() {
+            username = $("#inputUsername").val();
+            activationkey = $("#inputActivationKey").val();
+            if(!username) {
+                $("#message").text("Input UserID !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            if(!activationkey) {
+                $("#message").text("Input Activation Key !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            var userData = {
+                Username : username,
+                Pool : userPool
+               };
+            cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            cognitoUser.confirmRegistration(activationkey, true, function(err, result){
+                if (err) {
+                    console.log(err);
+                    message_text = err;
+                    message_class = "alert-danger";
+                    $("#message").text(message_text);
+                    $("#message").addClass(message_class);
+                    $("#message").show();
+                } else {
+                     var url = "signin.html";
+                     $("form").fadeOut(100, function(){
+                        $(location).attr("href", url);
+                     });
+                     $(".wrapper").addClass("form-success"); 
+                }
+            });
+        });
+
+        $("#send_key_btn").click(function() {
+            username = $("#inputUsername").val();
+            if(!username) {
+                $("#message").text("Input UserName !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            var userData = {
+                Username : username,
+                Pool : userPool
+               };
+            cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            cognitoUser.resendConfirmationCode(function(err, result) {
+                if (err) {
+                    console.log(err);
+                    $("#message").text(err);
+                    $("#message").addClass("alert-danger");
+                    $("#message").show();
+                } else {
+                    $("#message").text("Send Activation Key.");
+                    $("#message").addClass("alert-success");
+                    $("#message").show();
+                }
+            });
+        });
+
+        $("#forget_password_btn").click(function() {
+            username = $("#inputUsername").val();
+            if(!username) {
+                $("#message").text("Input UserID or Email !!");
+                $("#message").addClass("alert-danger");
+                $("#message").show();
+                return false;
+            }
+            var userData = {
+                Username : username,
+                Pool : userPool
+               };
+            cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            cognitoUser.forgotPassword({
+                onSuccess: function (result) {
+                    console.log("call result: " + result);
+                },
+                onFailure: function(err) {
+                    alert(err);
+                },
+                inputVerificationCode() {
+                    var verificationCode = prompt("Please input verification code ", "");
+                    var newPassword = prompt("Enter new password ", "");
+                    cognitoUser.confirmPassword(verificationCode, newPassword, this);
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
