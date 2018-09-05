@@ -58,7 +58,7 @@ function console_log( $data ){
 $sdk = new Aws\Sdk([
     'region'   => 'ap-northeast-1',
     'version'  => 'latest',
-    'debug' => true,
+    'debug' => false,
     'endpoint' => 'http://dynamodb.ap-northeast-1.amazonaws.com/'
 ]);
 
@@ -87,9 +87,9 @@ $params = [
 
 try {
     $result = $dynamodb->getItem($params);
-    print_r($result["json"]);
+    print_r($result["Item"]);
     console_log($params);
-    console_log($result);
+    console_log($result["Item"]);
 
 } catch (DynamoDbException $e) {
     echo "Unable to get item:\n";
