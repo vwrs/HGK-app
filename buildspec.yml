@@ -1,0 +1,56 @@
+version: 0.2
+
+#env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+
+phases:
+  #install:
+    #commands:
+      # - command
+      # - command
+    #finally:
+      # - command
+      # - command
+  #pre_build:
+    #commands:
+      # - command
+      # - command
+    #finally:
+      # - command
+      # - command
+  build:
+    commands:
+      - echo "docker build -t hgk/app ."
+      - docker build -t hgk/app .
+
+      # - command
+      # - command
+    #finally:
+      # - command
+      # - command
+  post_build:
+    - echo "docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest"
+    - docker tag hgk/app:latest 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
+    - docker push 756081124733.dkr.ecr.ap-northeast-1.amazonaws.com/hgk/app:latest
+    #commands:
+      # - command
+      # - command
+    #finally:
+      # - command
+      # - command
+#artifacts:
+  #files:
+    # - location
+    # - location
+    # - name
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - path
+    # - path
