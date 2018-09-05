@@ -13,6 +13,12 @@
 	height: 400px;
 }
 </style>
+
+<script>
+function tm(){
+        tm = setInterval("location.reload()",60000);
+    }
+</script>
 </head>
 <script>
 var map;
@@ -32,10 +38,16 @@ function initMap() {
           lng: 139.716807
 	}
 	});
+ infoWindow = new google.maps.InfoWindow({
+        content: '<div class="sample">AWS Japan</div>' 
+  });
+ marker.addListener('click', function() { 
+     infoWindow.open(map, marker); 
+    });
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=initMap"async></script>
-<body>
+<body onLoad="tm()">
 
 <div id="container">
 	<div id="sample"></div>
@@ -54,7 +66,6 @@ function console_log( $data ){
   echo 'console.log('. json_encode( $data ) .')';
   echo '</script>';
 }
-
 $sdk = new Aws\Sdk([
     'region'   => 'ap-northeast-1',
     'version'  => 'latest',
