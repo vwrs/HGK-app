@@ -16,14 +16,22 @@
 </head>
 <script>
 var map;
+var marker;
 function initMap() {
  map = new google.maps.Map(document.getElementById('sample'), {
      center: {
-           lat: 34.7019399, 
-          lng: 135.51002519999997
+           lat: 35.633454, 
+          lng: 139.716807
        },
-      zoom: 19
+      zoom: 15
    });
+ marker = new google.maps.Marker({
+	map : map,
+	position : {
+           lat: 35.633454, 
+          lng: 139.716807
+	}
+	});
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=initMap"async></script>
