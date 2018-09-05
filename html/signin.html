@@ -40,11 +40,11 @@
         // Initialize the Amazon Cognito credentials provider
         AWSCognito.config.region = "ap-northeast-1";
         AWSCognito.config.credentials = new AWS.CognitoIdentityCredentials({
-            IdentityPoolId: "ap-southeast-2:7188570c-2217-4b32-afad-6d06e199aeed"
+            IdentityPoolId: "ap-northeast-1:93cd62a1-0358-4296-80f9-7c10584fe0c0"
         });
         var poolData = {
-            UserPoolId: "ap-southeast-2_o1miKeaj4",
-            ClientId: "5jv7a16l6nvhm11ckk1h86pv10"
+            UserPoolId: "ap-northeast-1_lCn2ESmCm",
+            ClientId: "3nbekhjm5a0a28eeocu9pj6e26"
         };
         var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
         var attributeList = [];
@@ -84,9 +84,9 @@
                     console.log("Refresh Token + " + result.refreshToken.token);
                     AWS.config.region = "ap-northeast-1";
                     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-                        IdentityPoolId: "ap-southeast-2:7188570c-2217-4b32-afad-6d06e199aeed",
+                        IdentityPoolId: "ap-northeast-1:93cd62a1-0358-4296-80f9-7c10584fe0c0",
                         Logins: {
-                            "cognito-idp.ap-northeast-1.amazonaws.com/ap-southeast-2_o1miKeaj4" : result.getIdToken().getJwtToken()
+                            "cognito-idp.ap-northeast-1.amazonaws.com/ap-northeast-1_lCn2ESmCm" : result.getIdToken().getJwtToken()
                         }
                     });
                     AWS.config.credentials.get(function(err) {
