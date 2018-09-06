@@ -6,3 +6,4 @@
 .*.un~
 __pycache__
 .ropeproject
+credentials

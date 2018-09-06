@@ -9,3 +9,7 @@ RUN curl -sS https://getcomposer.org/installer | php
 RUN php -d memory_limit=-1 composer.phar require aws/aws-sdk-php
 WORKDIR /var/www/html
 COPY ./html /var/www/html
+COPY ./credentials /.aws/credentials
+RUN chmod -R 700 /.aws
+RUN chown -R www-data:www-data /.aws
+
