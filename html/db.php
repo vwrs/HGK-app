@@ -13,13 +13,19 @@
 <h1>フォームデータの送信</h1>
 <form action = "db.php" method = "post">
 <p>
-ID：<input type = "text" name ="id"><br/>
+ID：<input type = "text" name ="id" id="username"><br/>
 </p>
 <p>
-緯度：<input type = "text" name ="lat"><br/>
+緯度：<input type = "text" name ="lat" value="<?=$_POST['lat']?>"><br/>
 </p>
 <p>
-経度：<input type = "text" name ="lng"><br/>
+経度：<input type = "text" name ="lng" value="<?=$_POST['lng']?>"><br/>
+</p>
+<p>
+仕事：<input type = "text" name ="job"><br/>
+</p>
+<p>
+性別：<input type = "text" name ="gender"><br/>
 </p>
 <input type = "submit" value ="送信">
 </form>
@@ -36,10 +42,12 @@ function console_log( $data ){
   echo 'console.log('. json_encode( $data ) .')';
   echo '</script>';
 }
-if(isset($_POST['id'])){
-$id = $_POST['id'];
 $lat = $_POST['lat'];
 $lng = $_POST['lng'];
+if(isset($_POST['id'])){
+$id = $_POST['id'];
+$job = $_POST['job'];
+$gender = $_POST['gender'];
 
 $sdk = new Aws\Sdk([
     'region'   => 'ap-northeast-1',
@@ -58,8 +66,8 @@ $jsonstr = utf8_encode('
         "jsonform": {
             "lat": ' . $lat . ',
             "lng": ' . $lng .',
-	    "job": "student",
-	    "gender": "male"
+	    "job": "' . $job .'",
+	    "gender": "' . $gender .'"
         }
     }
 ');
