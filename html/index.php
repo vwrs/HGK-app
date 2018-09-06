@@ -114,6 +114,7 @@ function initMap() {
 function makeMarker(map, lat, lng) {
   return new google.maps.Marker({
 	map : map,
+	animation: google.maps.Animation.DROP,
 	position : {
            lat: lat,
           lng: lng 
