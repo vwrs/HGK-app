@@ -36,10 +36,10 @@ ID：<input type = "text" name ="id" id="username"><br/>
 経度：<input type = "text" name ="lng" value="<?=$_POST['lng']?>"><br/>
 </p>
 <p>
-仕事：<input type = "text" name ="job"><br/>
+仕事：<input type = "text" name ="job" value="<?=$_POST['job']?>"><br/>
 </p>
 <p>
-性別：<input type = "text" name ="gender"><br/>
+性別：<input type = "text" name ="gender" value="<?=$_POST['gender']?>"><br/>
 </p>
 <input type = "submit" value ="送信">
 </form>
