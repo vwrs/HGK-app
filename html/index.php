@@ -24,8 +24,8 @@ function tm(){
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
 
-<script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
 <!-- Amazon Cognito //-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
 <script src="js/jsbn.js"></script>
 <script src="js/jsbn2.js"></script>
 <script src="js/sjcl.js"></script>
