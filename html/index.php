@@ -143,9 +143,12 @@ function getClickLatLng(lat_lng, map) {
    $('input[name="lng"]').val(lat_lng.lng());
 
    // マーカーを設置
+   var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+   //var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
    marker = new google.maps.Marker({
      position: lat_lng,
-     map: map
+     map: map,
+     icon: image
    });
 
    // 座標の中心をずらす
