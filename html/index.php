@@ -23,7 +23,15 @@ function tm(){
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-	
+
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
+<!-- Amazon Cognito //-->
+<script src="js/jsbn.js"></script>
+<script src="js/jsbn2.js"></script>
+<script src="js/sjcl.js"></script>
+<script src="js/aws-cognito-sdk.min.js"></script>
+<script src="js/amazon-cognito.min.js"></script>
+<script src="js/amazon-cognito-identity.min.js"></script>
 <script src=js/session.js></script>
 </head>
 <script>
