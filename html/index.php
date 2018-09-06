@@ -51,18 +51,16 @@ $items = $fulls[0]['Items'];
 <meta charset="UTF-8">
 <title>Google Maps API</title>
 <style type="text/css">
-#container {
-	width: 1500px;
-	margin: 0 auto;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-#sample {
-	width: 1500px;
-	height: 700px;
+#map {
+  width: 100%;
+  height: 100%;
 }
 </style>
-
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=mapCallback"async></script>
 
 <script>
 function tm(){
@@ -84,6 +82,18 @@ function tm(){
 <script src="js/amazon-cognito-identity.min.js"></script>
 <script src="js/session.js"></script>
 </head>
+
+<body onLoad="tm()">
+<form action = "db.php" method = "post">
+lat: <input type="text" name="lat" id="lat" />
+lng: <input type="text" name="lng" id="lng" />
+<button type="submit">追加</button>
+</form>
+
+<div id="map"></div>
+
+<p class="back"><a href="http://www.tam-tam.co.jp/tipsnote/javascript/post7755.html">LINK</a></p>
+
 <script>
 var map;
 var marker;
@@ -91,7 +101,7 @@ var markers;
 var $full = <?php echo json_encode($fulls); ?>;
 
 function initMap() {
-  return new google.maps.Map(document.getElementById('sample'), {
+  return new google.maps.Map(document.getElementById('map'), {
      // TODO: 現在地にしたい
      center: {
            lat: 35.633454,
@@ -113,7 +123,7 @@ function makeMarker(map, lat, lng) {
 
 function markerListener(marker) {
   infoWindow = new google.maps.InfoWindow({
-        content: '<div class="sample">content</div>' 
+        content: '<div class="map">content</div>' 
   });
   marker.addListener('click', function() { 
      infoWindow.open(map, marker); 
@@ -154,26 +164,6 @@ function mapCallback () {
 }
 
 </script>
-<body onLoad="tm()">
-<!--
-  <ul>
-    <li>lat: <span id="lat"></span></li>
-    <li>lng: <span id="lng"></span></li>
-  </ul>
--->
-<form action = "db.php" method = "post">
-lat: <input type="text" name="lat" id="lat" />
-lng: <input type="text" name="lng" id="lng" />
-<button type="submit">追加</button>
-</form>
-<div id="container">
-	<div id="sample"></div>
-
-	<p class="back"><a href="http://www.tam-tam.co.jp/tipsnote/javascript/post7755.html">LINK</a></p>
-</div>
-
-<script>
-
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=mapCallback"></script>
 </body>
 </html>
