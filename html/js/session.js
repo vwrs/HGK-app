@@ -18,13 +18,13 @@ if (cognitoUser != null) {
                     alert(err);
                     return;
                 }
-                $("#username").html("Username: " + cognitoUser.username);
+                $("#username").val(cognitoUser.username);
  
-                for (i = 0; i < attrresult.length; i++) {
-                    if (attrresult[i].getName()=="email"){
-                      $("#email").html("EMail: " + attrresult[i].getValue());
-                    }
-                }
+//                 for (i = 0; i < attrresult.length; i++) {
+//                     if (attrresult[i].getName()=="email"){
+//                       $("#email").html("EMail: " + attrresult[i].getValue());
+//                     }
+//                 }
  
                 // Add the User's Id Token to the Cognito credentials login map.
                 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
