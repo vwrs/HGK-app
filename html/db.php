@@ -11,12 +11,11 @@
 <script src="js/aws-cognito-sdk.min.js"></script>
 <script src="js/amazon-cognito.min.js"></script>
 <script src="js/amazon-cognito-identity.min.js"></script>
+<script src="js/session.js"></script>
 	
 <!-- jquery //-->
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
-<script src="js/session.js"></script>
 
 </head>
 
@@ -76,7 +75,7 @@ $tableName = 'hgk-db';
 
 $jsonstr = utf8_encode('
     {
-        "user_id": ' . $id . ',
+        "user_name": "' . $id . '",
         "timestamp": 111,
         "jsonform": {
             "lat": ' . $lat . ',

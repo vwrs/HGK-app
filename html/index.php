@@ -1,3 +1,50 @@
+<?php
+
+require '../vendor/autoload.php';
+date_default_timezone_set('JST');
+
+use Aws\DynamoDb\Exception\DynamoDbException;
+use Aws\DynamoDb\Marshaler;
+function console_log( $data ){
+  echo '<script>';
+  echo 'console.log('. json_encode( $data ) .')';
+  echo '</script>';
+}
+
+$sdk = new Aws\Sdk([
+    'region'   => 'ap-northeast-1',
+    'version'  => 'latest',
+    'debug' => false,
+    'endpoint' => 'http://dynamodb.ap-northeast-1.amazonaws.com/'
+]);
+
+$dynamodb = $sdk->createDynamoDb();
+$marshaler = new Marshaler();
+
+function getFullScanResult($dynamodb, $conditions)
+{
+while (true) {
+    $result = $dynamodb->scan($conditions);
+    $dataFromDynamo = [];
+
+    if (!empty($result['Items'])) {
+	$dataFromDynamo[] = $result;
+    }
+
+    if (isset($result['LastEvaluatedKey'])) {
+	$conditions['ExclusiveStartKey'] = $result['LastEvaluatedKey'];
+    } else {
+	break;
+    }
+}
+return $dataFromDynamo;
+}
+
+$tableName = 'hgk-db';
+$conditions = ['TableName' => $tableName];
+$fulls = getFullScanResult($dynamodb, $conditions);
+$items = $fulls[0]['Items'];
+?>
 <!DOCTYPE HTML>
 <html lang="ja">
 <head>
@@ -14,10 +61,13 @@
 }
 </style>
 
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=mapCallback"async></script>
+
 <script>
 function tm(){
         tm = setInterval("location.reload()",60000);
-    }
+}
 </script>
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -39,53 +89,71 @@ var map;
 var marker;
 var markers;
 var $full = <?php echo json_encode($fulls); ?>;
-console.log($full);
+
 function initMap() {
- map = new google.maps.Map(document.getElementById('sample'), {
+  return new google.maps.Map(document.getElementById('sample'), {
+     // TODO: 現在地にしたい
      center: {
            lat: 35.633454,
           lng: 139.716807
        },
       zoom: 15
    });
- marker = new google.maps.Marker({
+}
+
+function makeMarker(map, lat, lng) {
+  return new google.maps.Marker({
 	map : map,
 	position : {
-           lat: 35.633454,
-          lng: 139.716807
+           lat: lat,
+          lng: lng 
 	}
-	});
- infoWindow = new google.maps.InfoWindow({
+  });
+}
+
+function markerListener(marker) {
+  infoWindow = new google.maps.InfoWindow({
         content: '<div class="sample">content</div>' 
   });
- marker.addListener('click', function() { 
+  marker.addListener('click', function() { 
      infoWindow.open(map, marker); 
-    });
-      map.addListener('click', function(e) {
-        getClickLatLng(e.latLng, map);
-      });
+  });
+  map.addListener('click', function(e) {
+    getClickLatLng(e.latLng, map);
+  });
 }
-   function getClickLatLng(lat_lng, map) {
 
-      // 座標を表示
-      $('input[name="lat"]').val(lat_lng.lat());
-      $('input[name="lng"]').val(lat_lng.lat());
+function getClickLatLng(lat_lng, map) {
+   // 座標を表示
+   $('input[name="lat"]').val(lat_lng.lat());
+   $('input[name="lng"]').val(lat_lng.lng());
 
-//      document.getElementById('lat').textContent = lat_lng.lat();
-//      document.getElementById('lng').textContent = lat_lng.lng();
+   // マーカーを設置
+   marker = new google.maps.Marker({
+     position: lat_lng,
+     map: map
+   });
 
-      // マーカーを設置
-      var marker = new google.maps.Marker({
-        position: lat_lng,
-        map: map
-      });
+   // 座標の中心をずらす
+   // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
+   map.panTo(lat_lng);
+}
 
-      // 座標の中心をずらす
-      // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
-      map.panTo(lat_lng);
-    }
+function mapCallback () {
+  map = initMap();
+  marker = makeMarker(map, 35.633454, 139.716807)
+  markerListener(marker);
+  // DynamoDBから読み込む
+  <?php if ($items): ?>
+  <?php foreach ($items as $item): ?>
+  console.log(<?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>);
+    var marker_dynamo = makeMarker(map, <?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>)
+    markerListener(marker_dynamo);
+  <?php endforeach; ?>
+  <?php endif; ?>
+}
+
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoMX0o0ClpB7BGPn2XZaF4ilD2blTZJAA&callback=initMap"async></script>
 <body onLoad="tm()">
 <!--
   <ul>
@@ -98,57 +166,14 @@ lat: <input type="text" name="lat" id="lat" />
 lng: <input type="text" name="lng" id="lng" />
 <button type="submit">追加</button>
 </form>
-<?php
-
-require '../vendor/autoload.php';
-date_default_timezone_set('UTC');
-
-use Aws\DynamoDb\Exception\DynamoDbException;
-use Aws\DynamoDb\Marshaler;
-function console_log( $data ){
-  echo '<script>';
-  echo 'console.log('. json_encode( $data ) .')';
-  echo '</script>';
-}
-$sdk = new Aws\Sdk([
-    'region'   => 'ap-northeast-1',
-    'version'  => 'latest',
-    'debug' => false,
-    'endpoint' => 'http://dynamodb.ap-northeast-1.amazonaws.com/'
-]);
-
-$dynamodb = $sdk->createDynamoDb();
-$marshaler = new Marshaler();
-
-    function getFullScanResult($dynamodb, $conditions)
-    {
-        while (true) {
-            $result = $dynamodb->scan($conditions);
-            $dataFromDynamo = [];
- 
-            if (!empty($result['Items'])) {
-                $dataFromDynamo[] = $result;
-            }
- 
-            if (isset($result['LastEvaluatedKey'])) {
-                $conditions['ExclusiveStartKey'] = $result['LastEvaluatedKey'];
-            } else {
-                break;
-            }
-        }
-        return $dataFromDynamo;
-    }
-$tableName = 'hgk-db';
-$conditions = ['TableName' => $tableName];
-$fulls = getFullScanResult($dynamodb, $conditions);
-var_dump($fulls);
-$tableName = 'hgk-db';
-
-?>
 <div id="container">
 	<div id="sample"></div>
 
 	<p class="back"><a href="http://www.tam-tam.co.jp/tipsnote/javascript/post7755.html">LINK</a></p>
 </div>
+
+<script>
+
+</script>
 </body>
 </html>
