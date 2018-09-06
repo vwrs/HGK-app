@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Page</title>
+    <!-- AWS SDK //-->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
+    <!-- Amazon Cognito //-->
+    <script src="js/jsbn.js"></script>
+    <script src="js/jsbn2.js"></script>
+    <script src="js/sjcl.js"></script>
+    <script src="js/aws-cognito-sdk.min.js"></script>
+    <script src="js/amazon-cognito.min.js"></script>
+    <script src="js/amazon-cognito-identity.min.js"></script>
+    <!-- jquery //-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- IE //-->
+    <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+    <!-- bootstrap3 //-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src=js/session.js></script>
+</head>
+<body>
+    <div class="container">
+        <form class="form-mypage" name="form1">
+            <h2 class="form-mypage-heading">My Page</h2>
+            <div id="message" class="alert" style="display:none;"></div><!-- 
+            <label id="labelUsername">UserID : </label><br>
+            <input type="hidden" id="inputUsername" class="form-control" placeholder="UserID" required autofocus></input>
+            <label id="labelEmail">Email : </label><br>
+            <input type="hidden" id="inputEmail" class="form-control" placeholder="Email" required autofocus></input> -->
+            <div id="username">Username: XXXXX</div>
+            <div id="email">EMail: XXXXX</div>
+            <p><br/></p>
+            <input type="button" class="btn btn-lg btn-primary btn-bloc" id="sign_out_btn" value="Sign Out"></input>
+        </form>
+    </div>
+</body>
+</html>
