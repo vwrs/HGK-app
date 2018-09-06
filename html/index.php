@@ -32,7 +32,7 @@ function tm(){
 <script src="js/aws-cognito-sdk.min.js"></script>
 <script src="js/amazon-cognito.min.js"></script>
 <script src="js/amazon-cognito-identity.min.js"></script>
-<script src=js/session.js></script>
+<script src="js/session.js"></script>
 </head>
 <script>
 var map;
