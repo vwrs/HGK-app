@@ -72,11 +72,12 @@ $dynamodb = $sdk->createDynamoDb();
 $marshaler = new Marshaler();
 
 $tableName = 'hgk-db';
+$time = time();
 
 $jsonstr = utf8_encode('
     {
         "user_name": "' . $id . '",
-        "timestamp": 111,
+        "timestamp": ' . $time . ',
         "jsonform": {
             "lat": ' . $lat . ',
             "lng": ' . $lng .',
