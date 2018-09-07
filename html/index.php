@@ -166,7 +166,7 @@ function mapCallback () {
   console.log(<?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>,'<?=$item['jsonform']['M']['gender']['S']?>');
     var marker_dynamo = makeMarker(map, <?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>)
     content = "gender :"+'<?=$item['jsonform']['M']['gender']['S']?>'+"</br>"+"job : "+'<?=$item['jsonform']['M']['job']['S']?>'
-              +'<form action="./test.php" method="get">'+"username : "+'<input type="text" name="username" id="username" /></br>'
+              +'<form action="./test.php" method="get">'+"username : "+'<input type="text" name="username" id="username" value='+`${cognitoUser.username}`+' /></br>'
               +'<button type="submit">'+"この人と食べる"+'</button></form>'
     markerListener(marker_dynamo,content);
   <?php endforeach; ?>
