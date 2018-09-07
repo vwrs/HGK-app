@@ -53,8 +53,8 @@ $items = $fulls[0]['Items'];
 <style type="text/css">
 html, body {
   height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 5px;
+  padding: 5px;
 }
 #map {
   width: 100%;
@@ -85,6 +85,7 @@ function tm(){
 
 <body onLoad="tm()">
 <form action = "db.php" method = "post">
+username: <input type="text" name="username" id="username" />
 lat: <input type="text" name="lat" id="lat" />
 lng: <input type="text" name="lng" id="lng" />
 job: <input type="text" name="job" id="job" />
@@ -119,7 +120,7 @@ function makeMarker(map, lat, lng) {
 	animation: google.maps.Animation.DROP,
 	position : {
            lat: lat,
-          lng: lng 
+          lng: lng
 	}
   });
 }
@@ -127,10 +128,10 @@ function makeMarker(map, lat, lng) {
 function markerListener(marker,content) {
   var info = `<div class="map">${content}</div>`
   infoWindow = new google.maps.InfoWindow({
-        content: info 
+        content: info
   });
-  marker.addListener('click', function() { 
-     infoWindow.open(map, marker); 
+  marker.addListener('click', function() {
+     infoWindow.open(map, marker);
   });
   map.addListener('click', function(e) {
     getClickLatLng(e.latLng, map);

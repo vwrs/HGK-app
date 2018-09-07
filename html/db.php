@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8">
 
+<!-- AWS SDK for JavaScript -->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js"></script>
+
+<!-- jquery //-->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
 <!-- Amazon Cognito //-->
-<script src="https://sdk.amazonaws.com/js/aws-sdk-2.23.0.min.js"></script>
 <script src="js/jsbn.js"></script>
 <script src="js/jsbn2.js"></script>
 <script src="js/sjcl.js"></script>
@@ -12,63 +20,19 @@
 <script src="js/amazon-cognito.min.js"></script>
 <script src="js/amazon-cognito-identity.min.js"></script>
 <script src="js/session.js"></script>
-	
-<!-- jquery //-->
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+<title>待機中...</title>
 </head>
 
+
 <body>
-<meta charset = "UFT-8">
-<title>フォームからデータを受け取る</title>
-</head>
-<body>
-<h1>フォームデータの送信</h1>
-<script>
-</script>
-<form action = "db.php" method = "post">
-<p>
-ID：<input type = "text" name ="id" id="username"><br/>
-</p>
-<p>
-緯度：<input type = "text" name ="lat" value="<?=$_POST['lat']?>"><br/>
-</p>
-<p>
-経度：<input type = "text" name ="lng" value="<?=$_POST['lng']?>"><br/>
-</p>
-<p>
-仕事：<input type = "text" name ="job" value="<?=$_POST['job']?>"><br/>
-</p>
-<p>
-性別：<input type = "text" name ="gender" value="<?=$_POST['gender']?>"><br/>
-</p>
-<p>
-infomation: <br>
-<textarea name="info" rows="4" cols="40"></textarea><br>
-</p>
-<input type = "submit" value ="送信">
-</form>
 <?php
-
 require '../vendor/autoload.php';
-
 date_default_timezone_set('UTC');
 
+// save to DynamoDB
 use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
-function console_log( $data ){
-  echo '<script>';
-  echo 'console.log('. json_encode( $data ) .')';
-  echo '</script>';
-}
-$lat = $_POST['lat'];
-$lng = $_POST['lng'];
-if(isset($_POST['id'])){
-$id = $_POST['id'];
-$job = $_POST['job'];
-$gender = $_POST['gender'];
-$info = $_POST['info'];
 
 $sdk = new Aws\Sdk([
     'region'   => 'ap-northeast-1',
@@ -76,75 +40,117 @@ $sdk = new Aws\Sdk([
 ]);
 
 $dynamodb = $sdk->createDynamoDb();
-$marshaler = new Marshaler();
 
-$tableName = 'hgk-db';
-$time = time();
+if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
+  $username = $_POST['username'];
+  $lat = $_POST['lat'];
+  $lng = $_POST['lng'];
+  $job = $_POST['job'];
+  $gender = $_POST['gender'];
 
-$jsonstr = utf8_encode('
-    {
-        "user_name": "' . $id . '",
-        "timestamp": ' . $time . ',
-        "jsonform": {
-            "lat": ' . $lat . ',
-            "lng": ' . $lng .',
-	    "job": "' . $job .'",
-	    "gender": "' . $gender .'",
-	    "info": "' . $info .'"
-        }
-    }
-');
-# echo '<pre>';
-# var_dump(utf8_encode($jsonstr));
-# echo '</pre>';
-# echo '<pre>';
-# var_dump(json_decode(utf8_encode($jsonstr)));
-# echo '</pre>';
-# switch (json_last_error()) {
-#         case JSON_ERROR_NONE:
-#             echo ' - No errors';
-#         break;
-#         case JSON_ERROR_DEPTH:
-#             echo ' - Maximum stack depth exceeded';
-#         break;
-#         case JSON_ERROR_STATE_MISMATCH:
-#             echo ' - Underflow or the modes mismatch';
-#         break;
-#         case JSON_ERROR_CTRL_CHAR:
-#             echo ' - Unexpected control character found';
-#         break;
-#         case JSON_ERROR_SYNTAX:
-#             echo ' - Syntax error, malformed JSON';
-#         break;
-#         case JSON_ERROR_UTF8:
-#             echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
-#         break;
-#         default:
-#             echo ' - Unknown error';
-#         break;
-#     }
+  $marshaler = new Marshaler();
 
+  $jsonstr = utf8_encode('
+  {
+    "user_name": "' . $username . '",
+    "jsonform": {
+      "lat": ' . $lat . ',
+      "lng": ' . $lng .',
+      "job": "' . $job .'",
+      "gender": "' . $gender .'"
+    },
+    "done": false
+  }
+  ');
 
-$item = $marshaler->marshalJson($jsonstr);
+  $item = $marshaler->marshalJson($jsonstr);
 
-$params = [
-    'TableName' => 'hgk-db',
-    'Item' => $item
-];
+  $params = [
+      'TableName' => 'hgk',
+      'Item' => $item
+  ];
 
-echo '<pre>';
-var_dump($item);
-echo '</pre>';
-
-try {
+  try {
     $result = $dynamodb->putItem($params);
     echo "Added item: $id - $lat - $lng\n";
+    echo "待機中...";
 
-} catch (DynamoDbException $e) {
+
+  } catch (DynamoDbException $e) {
     echo "Unable to add item:\n";
     echo $e->getMessage() . "\n";
-}
+  }
+
+} else if (isset($_GET['check'])){
+  $params = [
+    'TableName' => 'hgk',
+    'Key' => [
+      'user_name' => [
+        'S' => $_GET['check'],
+      ],
+    ]
+  ];
+  $result = $dynamodb->getItem($params);
+  $user_list = $result['Item']['user_list']['L'];
+  if ($user_list) {
+    echo "<p>以下のユーザーがあなたとランチしたいと言っています！</p>";
+    echo "<ul>";
+    foreach ($user_list as $username) {
+      echo '<li><a href="/match.php?user='.$username['S'].'">'.$username['S'] .'</a></li>';
+    }
+    echo "</ul>";
+  } else {
+    echo "待機中...";
+  }
+
+} else {
+  // redirect to index page
+  echo "<script>window.location = '/';</script>";
 }
 ?>
+
+
+<form action = "db.php" method = "GET">
+  <input type="hidden" name="check" value="check" />
+  <button type="submit">Check</button>
+</form>
+
+<script>
+$(function(){
+  $('input[name="check"]').val(cognitoUser.username);
+});
+
+// JavaScript SDKを使う場合
+// AWS.config.region = 'ap-northeast-1'; // リージョン
+// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//     identitypoolid: 'ap-northeast-1:93cd62a1-0358-4296-80f9-7c10584fe0c0',
+// });
+// AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//     identitypoolid: 'ap-northeast-1:0086633d-ff6f-46a5-8fb7-74f7c4446a69',
+// });
+
+// var dynamodb = new AWS.DynamoDB();
+//
+// function readItem() {
+//   var params = {
+//   Key: {
+//     'user_name': {
+//       S: cognitoUser.username
+//     }
+//   },
+//   TableName: 'hgk'
+//   };
+//   dynamodb.getItem(params, function(err, data) {
+//    if (err) console.log(err, err.stack); // an error occurred
+//    else     console.log(data);           // successful response
+//   });
+//
+// }
+// $(function(){
+//   readItem();
+//
+// });
+
+</script>
 </body>
 </html>
