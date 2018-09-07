@@ -21,6 +21,9 @@
 <script src="js/amazon-cognito-identity.min.js"></script>
 <script src="js/session.js"></script>
 
+<!-- bootstrap -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
 <title>待機中...</title>
 </head>
 
@@ -72,9 +75,8 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
 
   try {
     $result = $dynamodb->putItem($params);
-    echo "Added item: $id - $lat - $lng\n";
-    echo "待機中...";
-
+    echo '<div class="alert alert-success">
+  <strong>登録しました！!</strong></div>';
 
   } catch (DynamoDbException $e) {
     echo "Unable to add item:\n";
@@ -100,7 +102,8 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
     }
     echo "</ul>";
   } else {
-    echo "待機中...";
+    echo '<div class="alert alert-info">
+  <strong>待機中...</strong></div>';
   }
 
 } else {
