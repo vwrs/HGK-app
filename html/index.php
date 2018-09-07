@@ -123,8 +123,12 @@ function makeMarker(map, lat, lng,content) {
           lng: lng 
 	}
   });
+  // クリックイベントを追加
+  map.addListener('click', function(e) {
+    getClickLatLng(e.latLng, map);
+  });
   var infoWindow = new google.maps.InfoWindow();
-google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow){ 
+  google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow){ 
     return function() {
         infoWindow.setContent(content);
         infoWindow.open(map,marker);
@@ -139,7 +143,7 @@ function getClickLatLng(lat_lng, map) {
 
    // マーカーを設置
    var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-   marker = new google.maps.Marker({
+   var click_marker = new google.maps.Marker({
      position: lat_lng,
      map: map,
      icon: image
