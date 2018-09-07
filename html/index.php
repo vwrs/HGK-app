@@ -87,6 +87,8 @@ function tm(){
 <form action = "db.php" method = "post">
 lat: <input type="text" name="lat" id="lat" />
 lng: <input type="text" name="lng" id="lng" />
+job: <input type="text" name="job" id="job" />
+gender: <input type="text" name="gender" id="gender" />
 <button type="submit">追加</button>
 </form>
 
@@ -122,9 +124,10 @@ function makeMarker(map, lat, lng) {
   });
 }
 
-function markerListener(marker) {
+function markerListener(marker,content) {
+  var info = `<div class="map">${content}</div>`
   infoWindow = new google.maps.InfoWindow({
-        content: '<div class="map">content</div>' 
+        content: info 
   });
   marker.addListener('click', function() { 
      infoWindow.open(map, marker); 
@@ -140,9 +143,12 @@ function getClickLatLng(lat_lng, map) {
    $('input[name="lng"]').val(lat_lng.lng());
 
    // マーカーを設置
+   var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+   //var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
    marker = new google.maps.Marker({
      position: lat_lng,
-     map: map
+     map: map,
+     icon: image
    });
 
    // 座標の中心をずらす
@@ -157,9 +163,12 @@ function mapCallback () {
   // DynamoDBから読み込む
   <?php if ($items): ?>
   <?php foreach ($items as $item): ?>
-  console.log(<?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>);
+  console.log(<?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>,'<?=$item['jsonform']['M']['gender']['S']?>');
     var marker_dynamo = makeMarker(map, <?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>)
-    markerListener(marker_dynamo);
+    content = "gender :"+'<?=$item['jsonform']['M']['gender']['S']?>'+"</br>"+"job : "+'<?=$item['jsonform']['M']['job']['S']?>'
+              +'<form action="./test.php" method="get">'+"username : "+'<input type="text" name="username" id="username" /></br>'
+              +'<button type="submit">'+"この人と食べる"+'</button></form>'
+    markerListener(marker_dynamo,content);
   <?php endforeach; ?>
   <?php endif; ?>
 }

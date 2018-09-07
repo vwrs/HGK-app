@@ -23,7 +23,6 @@
 
 
 <body>
-
 <?php
 
 require '../vendor/autoload.php';
