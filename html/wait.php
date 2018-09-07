@@ -21,8 +21,8 @@
     echo 'console.log('. json_encode( $data ) .')';
     echo '</script>';
   }
-  $my_name = 'test2';//htmlspecialchars($_GET["pinuser"]);
-  $your_name = 'test';//htmlspecialchars($_GET["username"]);
+  $my_name = htmlspecialchars($_GET["pinuser"]);
+  $your_name = htmlspecialchars($_GET["username"]);
 
   if(isset($my_name) or isset($your_name)){
     //done check
