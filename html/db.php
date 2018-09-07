@@ -25,6 +25,8 @@
 </head>
 <body>
 <h1>フォームデータの送信</h1>
+<script>
+</script>
 <form action = "db.php" method = "post">
 <p>
 ID：<input type = "text" name ="id" id="username"><br/>
@@ -40,6 +42,10 @@ ID：<input type = "text" name ="id" id="username"><br/>
 </p>
 <p>
 性別：<input type = "text" name ="gender" value="<?=$_POST['gender']?>"><br/>
+</p>
+<p>
+infomation: <br>
+<textarea name="info" rows="4" cols="40"></textarea><br>
 </p>
 <input type = "submit" value ="送信">
 </form>
@@ -62,6 +68,7 @@ if(isset($_POST['id'])){
 $id = $_POST['id'];
 $job = $_POST['job'];
 $gender = $_POST['gender'];
+$info = $_POST['info'];
 
 $sdk = new Aws\Sdk([
     'region'   => 'ap-northeast-1',
@@ -82,7 +89,8 @@ $jsonstr = utf8_encode('
             "lat": ' . $lat . ',
             "lng": ' . $lng .',
 	    "job": "' . $job .'",
-	    "gender": "' . $gender .'"
+	    "gender": "' . $gender .'",
+	    "info": "' . $info .'"
         }
     }
 ');
