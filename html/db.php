@@ -48,6 +48,7 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
   $username = $_POST['username'];
   $lat = $_POST['lat'];
   $lng = $_POST['lng'];
+  $info = $_POST['info'];
   $job = $_POST['job'];
   $gender = $_POST['gender'];
 
@@ -59,6 +60,7 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
     "jsonform": {
       "lat": ' . $lat . ',
       "lng": ' . $lng .',
+      "info": "' . $info .'",
       "job": "' . $job .'",
       "gender": "' . $gender .'"
     },

@@ -40,7 +40,7 @@ while (true) {
 return $dataFromDynamo;
 }
 
-$tableName = 'hgk-db';
+$tableName = 'hgk';
 $conditions = ['TableName' => $tableName];
 $fulls = getFullScanResult($dynamodb, $conditions);
 $items = $fulls[0]['Items'];
@@ -88,6 +88,7 @@ function tm(){
 username: <input type="text" name="username" id="username" />
 lat: <input type="text" name="lat" id="lat" />
 lng: <input type="text" name="lng" id="lng" />
+info: <input type="text" name="info" id="info" />
 job: <input type="text" name="job" id="job" />
 gender: <input type="text" name="gender" id="gender" />
 <button type="submit">追加</button>
@@ -120,7 +121,7 @@ function makeMarker(map, lat, lng,content) {
 	animation: google.maps.Animation.DROP,
 	position : {
            lat: lat,
-          lng: lng 
+          lng: lng
 	}
   });
   // クリックイベントを追加
@@ -128,12 +129,12 @@ function makeMarker(map, lat, lng,content) {
     getClickLatLng(e.latLng, map);
   });
   var infoWindow = new google.maps.InfoWindow();
-  google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow){ 
+  google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow){
     return function() {
         infoWindow.setContent(content);
         infoWindow.open(map,marker);
     };
-})(marker,content,infoWindow));  
+})(marker,content,infoWindow));
 }
 
 function getClickLatLng(lat_lng, map) {

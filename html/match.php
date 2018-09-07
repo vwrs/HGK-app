@@ -72,5 +72,6 @@ $marshaler = new Marshaler();
 echo '<div class="alert alert-success">
 <strong>'.$_GET['user'].'</strong>とマッチしました！</div>';
 ?>
+
 </body>
 </html>
