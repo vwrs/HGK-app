@@ -59,7 +59,7 @@
         //echo '<li><a href="/match.php?user='.$your_name.'">'.$my_name.'</a></li>';
       }
       else {
-        echo "ひとりごはん回避ならず．．．";
+        // echo "ひとりごはん回避ならず．．．";
         echo '<a href=index.php target=_self>マップに戻る</a>';
       }
     }catch (DynamoDbException $e) {
@@ -111,7 +111,7 @@
   ];
     try {
       $response = $dynamodb->updateItem($param);
-    } 
+    }
     catch(Exception $e) {
       echo "Unable to query:\n";
       echo $e->getMessage() . "\n";
@@ -152,6 +152,10 @@
   <script src="js/amazon-cognito.min.js"></script>
   <script src="js/amazon-cognito-identity.min.js"></script>
   <script src="js/session.js"></script>
+
+<!-- bootstrap -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
 </head>
 
 
@@ -159,7 +163,8 @@
 
 
 <body onload="tm()">
-<h1>待機中．．．</h1>
+  <div class="alert alert-info">
+  <strong>待機中...</strong></div>
 
 
 
