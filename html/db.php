@@ -44,7 +44,7 @@ $sdk = new Aws\Sdk([
 
 $dynamodb = $sdk->createDynamoDb();
 
-if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
+if($_POST['username'] && $_POST['lat'] && $_POST['lng'] && $_POST['info'] && $_POST['job'] && $_POST['gender']){
   $username = $_POST['username'];
   $lat = $_POST['lat'];
   $lng = $_POST['lng'];
