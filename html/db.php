@@ -95,12 +95,12 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
   $result = $dynamodb->getItem($params);
   $user_list = $result['Item']['user_list']['L'];
   if ($user_list) {
-    echo "<p>以下のユーザーがあなたとランチしたいと言っています！</p>";
-    echo "<ul>";
+    echo '<div class="alert alert-danger">以下のユーザーがあなたとランチしたいと言っています！</div>';
+    echo '<div class="container"><ul class="list-group">';
     foreach ($user_list as $username) {
-      echo '<li><a href="/match.php?user='.$username['S'].'">'.$username['S'] .'</a></li>';
+      echo '<a href="/match.php?user='.$username['S'].'"><li class="list-group-item">'.$username['S'] .'</li></a>';
     }
-    echo "</ul>";
+    echo "</ul></div>";
   } else {
     echo '<div class="alert alert-info">
   <strong>待機中...</strong></div>';
@@ -112,12 +112,14 @@ if($_POST['username'] && $_POST['lat'] && $_POST['lng']){
 }
 ?>
 
+<div class="container">
 
 <form action = "db.php" method = "GET">
   <input type="hidden" name="check" value="check" />
-  <button type="submit">Check</button>
+  <button type="submit" class="btn btn-primary">Check</button>
 </form>
 
+</div>
 <script>
 $(function(){
   $('input[name="check"]').val(cognitoUser.username);
