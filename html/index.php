@@ -114,28 +114,22 @@ function initMap() {
    });
 }
 
-function makeMarker(map, lat, lng) {
-  return new google.maps.Marker({
+function makeMarker(map, lat, lng,content) {
+  var marker = new google.maps.Marker({
 	map : map,
 	animation: google.maps.Animation.DROP,
 	position : {
            lat: lat,
-          lng: lng
+          lng: lng 
 	}
   });
-}
-
-function markerListener(marker,content) {
-  var info = `<div class="map">${content}</div>`
-  infoWindow = new google.maps.InfoWindow({
-        content: info
-  });
-  marker.addListener('click', function() {
-     infoWindow.open(map, marker);
-  });
-  map.addListener('click', function(e) {
-    getClickLatLng(e.latLng, map);
-  });
+  var infoWindow = new google.maps.InfoWindow();
+google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow){ 
+    return function() {
+        infoWindow.setContent(content);
+        infoWindow.open(map,marker);
+    };
+})(marker,content,infoWindow));  
 }
 
 function getClickLatLng(lat_lng, map) {
@@ -145,7 +139,6 @@ function getClickLatLng(lat_lng, map) {
 
    // マーカーを設置
    var image = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-   //var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
    marker = new google.maps.Marker({
      position: lat_lng,
      map: map,
@@ -159,20 +152,19 @@ function getClickLatLng(lat_lng, map) {
 
 function mapCallback () {
   map = initMap();
-  marker = makeMarker(map, 35.633454, 139.716807)
-  markerListener(marker);
   // DynamoDBから読み込む
   <?php if ($items): ?>
   <?php foreach ($items as $item): ?>
   console.log(<?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>,'<?=$item['jsonform']['M']['gender']['S']?>');
-    var marker_dynamo = makeMarker(map, <?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>)
-    $content = "gender :"+'<?=$item['jsonform']['M']['gender']['S']?>'+"</br>"+"job : "+'<?=$item['jsonform']['M']['job']['S']?>'
+    content = "gender :"+'<?=$item['jsonform']['M']['gender']['S']?>'+"</br>"+"job : "+'<?=$item['jsonform']['M']['job']['S']?>'
               +'<form action="./test.php" method="get">'
-              +"pin's user : "+'<input type="text" name="pinuser" id="pinuser" value='+'<?=$item['user_name']['S']?>'+' /></br>'
-              +"your username : "+'<input type="text" name="username" id="username" value='+`${cognitoUser.username}`+' /></br>'
+              +"pin's user : "+'<input type="text" name="pinuser" id="pinuser" value='+'<?=$item['user_name']['S']?>'+' readonly/></br>'
+              +"your username : "+'<input type="text" name="username" id="username" value='+`${cognitoUser.username}`+' readonly/></br>'
               +"infomation :"+'<?=$item['jsonform']['M']['info']['S']?>'+"</br>"
               +'<button type="submit">'+"この人と食べる"+'</button></form>'
-    markerListener(marker_dynamo,$content);
+    var info = '<div class="map">'+content+'</div>';
+    console.log(info);
+    makeMarker(map, <?=$item['jsonform']['M']['lat']['N']?>, <?=$item['jsonform']['M']['lng']['N']?>,info);
   <?php endforeach; ?>
   <?php endif; ?>
 }
